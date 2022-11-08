@@ -15,13 +15,13 @@ enum LogicLevel {
 };
 
 // Peripheral memory map
-#define BOTTOMRAM_BASE		((uint32_t)0x00000000)
-#define SELFTEST_BASE		((uint32_t)0x00000200)
-#define TOPRAM_BASE			((uint32_t)0x00008000)
-#define SRAM_BASE			((uint32_t)0x00008400)
-#define GPIO_BASE			((uint32_t)0x80000000)
-#define CLINT_BASE			((uint32_t)0xE0000000)
-#define PLIC_BASE			((uint32_t)0xE0010000)
+#define BOTTOMRAM_BASE      ((uint32_t)0x00000000)
+#define SELFTEST_BASE       ((uint32_t)0x00000200)
+#define TOPRAM_BASE         ((uint32_t)0x00008000)
+#define SRAM_BASE           ((uint32_t)0x00008400)
+#define GPIO_BASE           ((uint32_t)0x80000000)
+#define CLINT_BASE          ((uint32_t)0xE0000000)
+#define PLIC_BASE           ((uint32_t)0xE0010000)
 
 // GPIO register block
 typedef struct {
