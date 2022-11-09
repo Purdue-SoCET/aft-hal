@@ -15,7 +15,7 @@ OBJDMP=riscv64-unknown-elf-objdump
 OBJDMPFLAGS=-S -d
  
 SRCS=src/startup/crt0.s src/main.cpp src/gpio/gpio.cpp src/stdlib/stdlib.cpp \
-	 src/int/int.c src/hal/hal.cpp
+	 src/int/int.c src/hal/hal.cpp src/int/intmgr.cpp
  
 all: meminit.elf meminit.bin
  

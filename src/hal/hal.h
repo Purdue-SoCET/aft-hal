@@ -6,6 +6,11 @@
 #include "../stdlib/stdlib.h"
 
 namespace HAL {
+	namespace {
+		uint32_t err_flg;
+	}
+
+	uint32_t get_err();
 	void hal_init();
 
 	class GPIO {
@@ -25,6 +30,24 @@ namespace HAL {
 		static bool gpioa_init;
 
 		GPIORegBlk* reg_blk;
+	};
+
+	class IntMgr {
+	public:
+		IntMgr();
+		static IntMgr* get();
+		IntMgr(IntMgr const&)=delete;
+		void operator=(IntMgr const&)=delete;
+
+		void trig_sw_int();
+		void clr_sw_int();
+	private:
+		static bool intmgr_init;
+
+		void setup_vtable();
+
+		CLINTRegBlk* clint_reg_blk;
+		PLICRegBlk* plic_reg_blk;
 	};
 }
 #endif /* HAL_H_ */

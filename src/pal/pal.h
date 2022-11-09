@@ -58,4 +58,17 @@ typedef struct {
     __IO uint64_t mtime;
     __IO uint64_t mtimecmp;
 } CLINTRegBlk;
+
+#define N_INTS 32
+
+// PLIC register block
+typedef struct {
+    uint32_t reserved0;
+    __IO uint32_t iprior[N_INTS];
+    __IO uint32_t ipndgr;
+    __IO uint32_t ier;
+    uint32_t reserved1;
+    __IO uint32_t ptr;
+    __IO uint32_t ccr;
+} PLICRegBlk;
 #endif /* PAL_H_ */

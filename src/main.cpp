@@ -2,16 +2,16 @@
 
 using HAL::hal_init;
 using HAL::GPIO;
+using HAL::IntMgr;
 
-void m_sw_handler( ) {
+void m_sw_handler() {
     print("this is the user implementation of the software handler\n");
-    uint32_t* addr = (uint32_t*) 0xE0000000;
-    *addr = 0x0;
+    IntMgr::get()->clr_sw_int();
 }
 
 int main() {
     GPIO* gpioa = nullptr;
-    GPIO* gpioa_cpy = nullptr;
+    IntMgr* intmgr = nullptr;
 
     hal_init( );
     
@@ -19,14 +19,10 @@ int main() {
         print("error: issue opening GPIO module for selected port\n");
     }
 
-    if (!(gpioa_cpy = GPIO::open(A))) {
-        print("error: issue opening GPIO module for selected port\n");
-    }
+    intmgr = IntMgr::get();
 
-    gpioa->dbg_blink( );
-
-    uint32_t* addr = (uint32_t*) 0xE0000000;
-    *addr = 0x1;
+    gpioa->dbg_blink();
+    intmgr->trig_sw_int();
 
     return 0;
 }
