@@ -2,7 +2,8 @@ BINS=meminit.bin
  
 CC=riscv64-unknown-elf-g++
 CCFLAGS=-g -march=rv32i -mabi=ilp32 -mcmodel=medany -static -nostdlib \
-		-fno-threadsafe-statics -O2
+		-fno-threadsafe-statics -ffreestanding -ffunction-sections \
+		-fdata-sections -O2
  
 ELFS=meminit.elf
  

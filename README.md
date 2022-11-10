@@ -7,6 +7,7 @@ Hardware abstraction library (HAL) for Purdue SoCET's system on chip.
 - [x] Local HAL error field
 - [ ] Register debug/layout function
 - [ ] Create function pointer array for interrupt handling
+- [ ] Change Makefile to compile using dependencies
 
 # Long Term To Do List
 - [ ] Improved print function

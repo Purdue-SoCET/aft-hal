@@ -52,12 +52,3 @@ void GPIO::set_output(GPIOPin pin, LogicLevel lvl) {
         reg_blk->data |= ((uint32_t) pin);
     }
 }
-
-void GPIO::dbg_blink() {
-    print("gpio: blinking gpio\n");
-
-    for (int i = 0; i < 8; ++i) {
-        reg_blk->data &= ~(0xFF);
-        reg_blk->data |= 0xFF;
-    }
-}

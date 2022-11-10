@@ -24,8 +24,6 @@ namespace HAL {
 		uint32_t read_input(GPIOPin pin);
 		void enable_output(GPIOPin pin);
 		void set_output(GPIOPin pin, LogicLevel lvl);
-		
-		void dbg_blink();
 	private:
 		static bool gpioa_init;
 
@@ -41,8 +39,13 @@ namespace HAL {
 
 		void trig_sw_int();
 		void clr_sw_int();
+		void entr_critsec();
+		void exit_critsec();
+		void reg_int_cb(void (*cb)(), IRQMap irq);
 	private:
 		static bool intmgr_init;
+		uint32_t mstatus_last;
+		void (*irq_cb[5])() = { nullptr };
 
 		void setup_vtable();
 

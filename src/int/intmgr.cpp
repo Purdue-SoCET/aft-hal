@@ -52,3 +52,19 @@ void IntMgr::trig_sw_int() {
 void IntMgr::clr_sw_int() {
     clint_reg_blk->msip = 0x0;
 }
+
+void IntMgr::entr_critsec() {
+    print("intmgr: entering critical section\n");
+    asm volatile("csrr %0, mstatus" : "=r" (mstatus_last));
+    uint32_t mstatus_next = mstatus_last & ~(0x8);
+    asm volatile("csrw mstatus, %0" : : "r" (mstatus_next));
+}
+
+void IntMgr::exit_critsec() {
+    asm volatile("csrw mstatus, %0" : : "r" (mstatus_last));
+    print("intmgr: critical section exited\n");
+}
+
+void IntMgr::reg_int_cb(void (*cb)(), IRQMap irq) {
+
+}

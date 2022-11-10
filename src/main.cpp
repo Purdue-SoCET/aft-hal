@@ -20,8 +20,6 @@ int main() {
     }
 
     intmgr = IntMgr::get();
-
-    gpioa->dbg_blink();
     intmgr->trig_sw_int();
 
     return 0;

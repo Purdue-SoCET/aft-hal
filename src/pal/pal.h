@@ -52,6 +52,15 @@ enum GPIOPin {
     Pin7 = 1 << 7
 };
 
+// IRQ mappings
+enum IRQMap {
+    Dflt  = 0,
+    Exc   = 1,
+    MSoft = 2,
+    MTim  = 3,
+    MExt  = 4
+};
+
 // CLINT register block
 typedef struct {
     __IO uint32_t msip;

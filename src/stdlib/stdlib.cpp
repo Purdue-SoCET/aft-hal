@@ -6,7 +6,7 @@ void print(const char* x) {
     }
 }
 
-void putint(int x) {
+void putinthex(int x) {
     char buf[11];
 
     buf[0] = '0';
