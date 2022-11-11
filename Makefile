@@ -7,7 +7,7 @@ CCFLAGS=-g -march=rv32i -mabi=ilp32 -mcmodel=medany -static -nostdlib \
  
 ELFS=meminit.elf
  
-LDFLAGS=-Wl,--gc-sections -nostartfiles -Wl,-T,src/startup/link.ld
+LDFLAGS=-Wl,-T,src/startup/link.ld #-Wl,--gc-sections
  
 OBJCPY=riscv64-unknown-elf-objcopy
 OBJCPYFLAGS=-O binary
@@ -15,8 +15,8 @@ OBJCPYFLAGS=-O binary
 OBJDMP=riscv64-unknown-elf-objdump
 OBJDMPFLAGS=-S -d
  
-SRCS=src/startup/crt0.s src/main.cpp src/gpio/gpio.cpp src/stdlib/stdlib.cpp \
-	 src/int/int.c src/hal/hal.cpp src/int/intmgr.cpp
+SRCS=src/main.cpp src/gpio/gpio.cpp src/stdlib/stdlib.cpp \
+	 src/int/int.c src/hal/hal.cpp src/int/intmgr.cpp src/startup/crt0.c
  
 all: meminit.elf meminit.bin
  

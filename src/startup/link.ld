@@ -8,9 +8,37 @@ ENTRY(_start);
 SECTIONS
 {
 
+    .startup :
+    {
+        *(.startup .startup.*)
+    } > RAM
+
     .text :
     {
         *(.text .text.*)
+    } > RAM
+
+    .preinit_array :
+    {
+        PROVIDE(__preinit_array_start = .);
+        KEEP(*(SORT_BY_INIT_PRIORITY(.preinit_array)));
+        PROVIDE(__preinit_array_end = .);
+    } > RAM
+
+    .init_array :
+    {
+        PROVIDE(__init_array_start = .);
+        KEEP(*(SORT_BY_INIT_PRIORITY(.init_array.*) SORT_BY_INIT_PRIORITY(.ctors.*)))
+        KEEP(*(.init_array .ctors));
+        PROVIDE(__init_array_end = .);
+    } > RAM
+
+    .fini_array :
+    {
+        PROVIDE(__fini_array_start = .);
+        KEEP(*(SORT_BY_INIT_PRIORITY(.fini_array.*) SORT_BY_INIT_PRIORITY(.dtors.*)));
+        KEEP(*(.fini_array .dtors));
+        PROVIDE(__fini_array_end = .);
     } > RAM
 
     .data :
@@ -20,12 +48,13 @@ SECTIONS
     
     PROVIDE(_edata = .);
 
-    PROVIDE(_sbss = .);
+    PROVIDE(__bss_start = .);
     .bss : 
     {
-        *(.bss)
+        *(.sbss .sbss.*)
+        *(.bss .bss.*)
     } > RAM
-    PROVIDE(_ebss = .);
+    PROVIDE(__bss_end = .);
     PROVIDE(_end = .);
     PROVIDE(__global_pointer$ = .);
     PROVIDE(__stack_top = ORIGIN(RAM) + LENGTH(RAM));
