@@ -1,4 +1,5 @@
 #include <stdint.h>
+#include "../stdlib/stdlib.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -16,17 +17,21 @@ extern int main();
 
 void __attribute__((section(".startup"))) _start() {
     uint32_t count = 0;
-    // Zero out BSS
-    for(uint8_t *p = __bss_start; p < __bss_end; p++) {
-        *p = 0;
-    }
-
+    
     // Setup stack/global pointer
     asm volatile(".option push;"
                  ".option norelax;"
                  "la gp, __global_pointer$;"
                  ".option pop;"
                  "la sp, __stack_top;");
+
+    // Zero out BSS
+    for(uint8_t *p = __bss_start; p < __bss_end; p++) {
+        *p = 0;
+    }
+    
+    putinthex((uint32_t)__bss_start);
+    putinthex((uint32_t)__bss_end);
 
     // Call init array
     count = __preinit_array_end - __preinit_array_start;

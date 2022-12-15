@@ -9,27 +9,17 @@ static IntMgr INTMGR;
 bool IntMgr::intmgr_init = false;
 
 // Default constructor
-IntMgr::IntMgr() : mstatus_last(0), clint_reg_blk((CLINTRegBlk *)CLINT_BASE), plic_reg_blk((PLICRegBlk *)PLIC_BASE) { 
-    print("Constructing IntMgr\n");
-    //clint_reg_blk = ((CLINTRegBlk *) CLINT_BASE);
-    //plic_reg_blk = ((PLICRegBlk *) PLIC_BASE);
-    //setup_vtable();
-}
+IntMgr::IntMgr() : mstatus_last(0), clint_reg_blk((CLINTRegBlk *) CLINT_BASE), 
+    plic_reg_blk((PLICRegBlk *) PLIC_BASE) {}
 
 // Constructs/gets interrupt manager
 IntMgr* IntMgr::get() {
-    print("IntMgr: get()\n");
     if (!intmgr_init) {
-        print("HAL: Initializing vector table\n");
+        print("hal: starting interrupt manager\n");
         INTMGR.setup_vtable();
     }
 
-    /*print("hal: starting interrupt manager\n");
     intmgr_init = true;
-    INTMGR.clint_reg_blk = ((CLINTRegBlk*) CLINT_BASE);
-    INTMGR.plic_reg_blk = ((PLICRegBlk*) PLIC_BASE);
-    */
-
     return &INTMGR;
 }
 

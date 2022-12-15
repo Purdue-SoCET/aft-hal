@@ -42,7 +42,7 @@ namespace HAL {
 		void entr_critsec();
 		void exit_critsec();
 		void reg_int_cb(void (*cb)(), IRQMap irq);
-	//private:
+	private:
 		static bool intmgr_init;
 		uint32_t mstatus_last;
 		void (*irq_cb[5])() = { nullptr };

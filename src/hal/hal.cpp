@@ -9,7 +9,6 @@ uint32_t HAL::get_err() {
 }
 
 void HAL::hal_init() {
-    print("hal: HAL Init\n");
     // Starts interrupt manager
     IntMgr::get();
 }

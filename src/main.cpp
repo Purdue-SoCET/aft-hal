@@ -5,7 +5,7 @@ using HAL::GPIO;
 using HAL::IntMgr;
 
 void __attribute__((constructor)) message() {
-    print("It's a secret to everybody\n");
+    print("hal: constructing peripherals\n");
 }
 
 void m_sw_handler() {
@@ -24,8 +24,6 @@ int main() {
     }
 
     intmgr = IntMgr::get();
-    print("CLINT block is ");
-    putinthex((uint32_t)intmgr->clint_reg_blk);
     intmgr->trig_sw_int();
 
     return 0;

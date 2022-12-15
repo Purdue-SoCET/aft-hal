@@ -5,9 +5,12 @@ Hardware abstraction library (HAL) for Purdue SoCET's system on chip.
 - [x] Add CLINT structure to [pal.h](https://github.com/Purdue-SoCET/aft-hal/blob/main/src/pal/pal.h)
 - [x] Add PLIC structure to [pal.h](https://github.com/Purdue-SoCET/aft-hal/blob/main/src/pal/pal.h)
 - [x] Local HAL error field
-- [ ] Register debug/layout function
-- [ ] Create function pointer array for interrupt handling
+- [x] Create function pointer array for interrupt handling
 - [ ] Change Makefile to compile using dependencies
+- [ ] Place dependencies in "build" directory (removed when clean is run)
+- [ ] Restructure module source directories for peripherals that pull-in other 
+      source files
+- [x] 3-level handler for external interrupt handling
 
 # Long Term To Do List
 - [ ] Improved print function
@@ -16,3 +19,4 @@ Hardware abstraction library (HAL) for Purdue SoCET's system on chip.
     - [ ] Containers
     - [ ] Smart pointers
 - [ ] Proper error handling
+- [ ] Register debug/layout function
