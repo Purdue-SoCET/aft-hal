@@ -1,5 +1,5 @@
 #include <stdint.h>
-#include "../stdlib/stdlib.h"
+#include "stdlib.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -7,6 +7,7 @@ extern "C" {
 
 extern uint8_t __bss_start[];
 extern uint8_t __bss_end[];
+extern uint8_t __heap_start[];
 extern uint32_t __stack_top;
 extern uint32_t __global_pointer$;
 extern void (*__preinit_array_start[])();
@@ -30,16 +31,21 @@ void __attribute__((section(".startup"))) _start() {
         *p = 0;
     }
     
-    putinthex((uint32_t)__bss_start);
-    putinthex((uint32_t)__bss_end);
+    /*putinthex((uint32_t)__bss_start);
+    putinthex((uint32_t)__bss_end);*/
+    print("BSS: "); putinthex((uint32_t)__bss_start); print(" - "); putinthex((uint32_t)__bss_end); print("\n");
+    print("Heap: "); putinthex((uint32_t)__heap_start); print("\n");
+    print("Stack: "); putinthex((uint32_t)&__stack_top); print("\n");
 
     // Call init array
     count = __preinit_array_end - __preinit_array_start;
+    print("preinit_array: "); putinthex((uint32_t)count); print(" items.\n");    
     for(int i = 0; i < count; i++) {
         __preinit_array_start[i]();
     }
    
     count = __init_array_end - __init_array_start;
+    print("init_array: "); putinthex((uint32_t)count); print(" items.\n");    
     for(int i = 0; i < count; i++) {
         __init_array_start[i]();
     }

@@ -1,4 +1,4 @@
-#include "../hal/hal.h"
+#include "hal.h"
 
 using HAL::GPIO;
 

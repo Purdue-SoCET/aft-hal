@@ -57,5 +57,7 @@ SECTIONS
     PROVIDE(__bss_end = .);
     PROVIDE(_end = .);
     PROVIDE(__global_pointer$ = .);
+    . = ALIGN(0x400);
+    PROVIDE(__heap_start = .);
     PROVIDE(__stack_top = ORIGIN(RAM) + LENGTH(RAM));
 }

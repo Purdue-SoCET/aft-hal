@@ -1,9 +1,9 @@
 #ifndef HAL_H_
 #define HAL_H_
 
-#include "../int/int.h"
-#include "../pal/pal.h"
-#include "../stdlib/stdlib.h"
+#include "int.h"
+#include "pal.h"
+#include "stdlib.h"
 
 namespace HAL {
 	namespace {
