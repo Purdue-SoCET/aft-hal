@@ -3,6 +3,9 @@
 
 #include <stdint.h>
 
+// System Clock Rate
+#define SYS_CLK 100000000
+
 // IO definitions
 #define __I  volatile const // Defines 'read-only' permissions
 #define __O  volatile       // Defines 'write-only' permissions
@@ -27,13 +30,13 @@ enum LogicLevel {
 // GPIO register block
 typedef struct {
     uint32_t reserved0;
-    __IO uint32_t data;
-    __IO uint32_t ddr;
-    __IO uint32_t ier;
-    __IO uint32_t per;
-    __IO uint32_t ner;
-    __IO uint32_t icr;
-    __IO uint32_t isr;
+    __IO uint32_t data; // data register
+    __IO uint32_t ddr;  // data direction register
+    __IO uint32_t ier;  // interrupt enable register
+    __IO uint32_t per;  // positive edge register
+    __IO uint32_t ner;  // negative edge register
+    __IO uint32_t icr;  // interrupt clear register
+    __IO uint32_t isr;  // interrupt status register
 } GPIORegBlk;
 
 // Available GPIOs
@@ -107,8 +110,10 @@ enum IRQMap {
 // CLINT register block
 typedef struct {
     __IO uint32_t msip;
-    __IO uint64_t mtime;
-    __IO uint64_t mtimecmp;
+    __IO uint32_t mtime;
+    __IO uint32_t mtimeh;
+    __IO uint32_t mtimecmp;
+    __IO uint32_t mtimecmph;
 } CLINTRegBlk;
 
 #define N_INTS 32
@@ -116,12 +121,12 @@ typedef struct {
 // PLIC register block
 typedef struct {
     uint32_t reserved0;
-    __IO uint32_t iprior[N_INTS];
-    __IO uint32_t ipndgr;
-    __IO uint32_t ier;
+    __IO uint32_t iprior[N_INTS]; // interrupt priority registers
+    __IO uint32_t ipndgr;         // interrupt pending register
+    __IO uint32_t ier;            // interrupt enable registers
     uint32_t reserved1;
-    __IO uint32_t ptr;
-    __IO uint32_t ccr;
+    __IO uint32_t ptr;            // interrupt pending threshold register
+    __IO uint32_t ccr;            // claim and complete register
 } PLICRegBlk;
 
 #endif /* PAL_H_ */
