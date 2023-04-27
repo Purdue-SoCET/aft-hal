@@ -24,10 +24,9 @@ namespace HAL {
 		uint32_t read_input(GPIOPin pin);
 		void enable_output(GPIOPin pin);
 		void set_output(GPIOPin pin, LogicLevel lvl);
-		GPIORegBlk* reg_blk;
 	private:
 		static bool gpioa_init;
-		//GPIORegBlk* reg_blk;
+		GPIORegBlk* reg_blk;
 	};
 
 	class IntMgr {
