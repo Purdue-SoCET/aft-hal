@@ -91,5 +91,46 @@ namespace HAL {
 		void (*user_swISR)() = NULL;
       void (*user_extISR[N_INTS])(uint32_t);
 	};
+	
+	class PWM {  
+	public:
+		PWM();
+		static PWM* setupChannels(); // function to set up channels
+		PWM(PWM const&)=delete;
+		void operator=(PWM const&)=delete;
+
+		///test func with direct access to reg.
+		static PWM* setup();  
+		void setP(uint32_t value);
+		void enableChanl();
+
+		//************************************************************
+		class Channel {
+		public:
+			Channel();
+
+			void setPeriod(uint32_t value);
+			uint32_t  getPeriod();
+			void setDuty(float percentage);
+			uint32_t  getDuty();
+			void setControlRegister(uint8_t enable, uint8_t polarity, uint8_t alignment);
+
+		private:
+			friend class PWM; // declare PWM as a friend class to allow access to private members
+			__IO uint32_t* per;
+			__IO uint32_t* duty;
+			__IO uint8_t* ctrl;
+			uint32_t curr_per;
+			uint32_t curr_duty;
+		};
+		int num_of_channle = 2;
+		Channel channels[2];  //2 -> num of channel
+		
+		//PWMRegBlk* pwm_reg_blk; //move it public to check reg val for testing *****
+	private:
+		static bool pwm_init;
+		PWMRegBlk* pwm_reg_blk;
+		
+	};
 }
 #endif /* HAL_H_ */
