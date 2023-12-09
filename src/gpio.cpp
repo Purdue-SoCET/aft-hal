@@ -52,3 +52,38 @@ void GPIO::set_output(GPIOPin pin, LogicLevel lvl) {
         reg_blk->data |= ((uint32_t) pin);
     }
 }
+
+void GPIO::set_direct(GPIOPin pin, LogicLevel lvl){
+    reg_blk->ddr &= ~((uint32_t) pin);
+
+    if (lvl == LogicLevel::High) {
+        reg_blk->ddr |= ((uint32_t) pin);
+    }
+}
+void GPIO::set_intrpt(GPIOPin pin, LogicLevel lvl){
+    reg_blk->ier &= ~((uint32_t) pin);
+
+    if (lvl == LogicLevel::High) {
+        reg_blk->ier |= ((uint32_t) pin);
+    }
+}
+void GPIO::set_pos_edge(GPIOPin pin, LogicLevel lvl){
+    reg_blk->per &= ~((uint32_t) pin);
+
+    if (lvl == LogicLevel::High) {
+        reg_blk->per |= ((uint32_t) pin);
+    }
+}
+void GPIO::set_neg_edge(GPIOPin pin, LogicLevel lvl){
+    reg_blk->ner &= ~((uint32_t) pin);
+
+    if (lvl == LogicLevel::High) {
+        reg_blk->ner |= ((uint32_t) pin);
+    }
+}
+void GPIO::clear_intrpt(GPIOPin pin){
+        reg_blk->icr |= ((uint32_t) pin);
+}
+bool GPIO::read_intrpt_status(GPIOPin pin) {
+    return reg_blk->isr & ((uint32_t) pin);
+}
