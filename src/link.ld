@@ -1,20 +1,15 @@
 MEMORY
 {
-    RAM : ORIGIN = 0x8400, LENGTH = 64K
+    RAM : ORIGIN = 0x8400, LENGTH = 32K
 }
 
-ENTRY(_start);
+ENTRY(boot);
 
 SECTIONS
 {
-
-    .startup :
-    {
-        *(.startup .startup.*)
-    } > RAM
-
     .text :
     {
+        *(.text.boot)
         *(.text .text.*)
     } > RAM
 
@@ -43,7 +38,10 @@ SECTIONS
 
     .data :
     {
-        *(.data .data.* .rodata .rodata.* .eh_frame .eh_frame.*);
+        *(.data .data.*)
+        *(.rodata .rodata.*)
+        *(.sdata .sdata.*)
+        *(.eh_frame .eh_frame.*)
     } > RAM
     
     PROVIDE(_edata = .);
