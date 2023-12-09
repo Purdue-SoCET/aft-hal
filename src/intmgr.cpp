@@ -249,12 +249,22 @@ void IntMgr::complete_extISR(uint32_t id) {
 }
 
 
-void IntMgr::enable_extISR(uint32_t int_id) {
-	plic_reg_blk->ier |= 1 << int_id;
+void IntMgr::enable_extISR(uint8_t select,uint32_t int_id) {
+    if (select == 0){
+        plic_reg_blk->ier0 |= 1 << int_id;
+    }
+    else {
+        plic_reg_blk->ier1 |= 1 << int_id;
+    }
 }
 
-void IntMgr::disable_extISR(uint32_t int_id) {
-	plic_reg_blk->ier &= ~(1 << int_id);
+void IntMgr::disable_extISR(uint8_t select,uint32_t int_id) {
+    if (select == 0){
+        plic_reg_blk->ier0 &= ~(1 << int_id);
+    }
+    else {
+        plic_reg_blk->ier1 &= ~(1 << int_id);
+    }
 }
 
 
