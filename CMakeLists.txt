@@ -56,7 +56,7 @@ file(GLOB LIB_HEADER src/include/pal.h include/*.h)
 cmake_print_variables(LIB_SOURCE)
 
 
-file(GLOB TEST *.cpp)
+file(GLOB TEST pwm_test.cpp) //change the name of the test file if you want
 foreach( filename ${TESTS} )
     get_filename_component(targetname ${filename} NAME_WE)
     add_executable(${targetname} ${filename} ${LIB_SOURCE} ${LIB_HEADER})
@@ -90,3 +90,13 @@ foreach( filename ${TESTS} )
 endforeach()
 add_custom_target(CopyFileTarget ALL
                   DEPENDS ~/AFTx07)
+add_custom_target(clean-all
+    COMMAND ${CMAKE_COMMAND} -E remove_directory ${CMAKE_BINARY_DIR}/CMakeFiles
+    COMMAND ${CMAKE_COMMAND} -E remove_directory ${CMAKE_BINARY_DIR}/CMakeTmp
+    COMMAND ${CMAKE_COMMAND} -E remove ${CMAKE_BINARY_DIR}/cmake_install.cmake
+    COMMAND ${CMAKE_COMMAND} -E remove ${CMAKE_BINARY_DIR}/CMakeCache.txt
+    COMMAND ${CMAKE_COMMAND} -E remove ${CMAKE_BINARY_DIR}/Makefile
+    COMMAND ${CMAKE_COMMAND} -E remove ${CMAKE_BINARY_DIR}/app
+    COMMAND ${CMAKE_COMMAND} -E remove ${CMAKE_BINARY_DIR}/*.bin
+    COMMENT "Cleaning up CMake-generated files"
+)
