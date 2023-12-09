@@ -1,10 +1,8 @@
 #ifndef HAL_H_
 #define HAL_H_
-
 #include "int.h"
 #include "pal.h"
 #include "stdlib.h"
-
 namespace HAL {
 	namespace {
 		uint32_t err_flg;
@@ -24,8 +22,15 @@ namespace HAL {
 		uint32_t read_input(GPIOPin pin);
 		void enable_output(GPIOPin pin);
 		void set_output(GPIOPin pin, LogicLevel lvl);
+		void set_direct(GPIOPin pin, LogicLevel lvl);
+		void set_intrpt(GPIOPin pin, LogicLevel lvl);
+		void set_pos_edge(GPIOPin pin, LogicLevel lvl);
+		void set_neg_edge(GPIOPin pin, LogicLevel lvl);
+		void clear_intrpt(GPIOPin pin);
+		bool read_intrpt_status(GPIOPin pin);
 	private:
 		static bool gpioa_init;
+
 		GPIORegBlk* reg_blk;
 	};
 
@@ -66,8 +71,8 @@ namespace HAL {
 		void (*get_extISR(uint32_t))(uint32_t);
 
 		// EXTERNAL interrupts functions
-      void enable_extISR(uint32_t);
-		void disable_extISR(uint32_t);
+      void enable_extISR(uint8_t select,uint32_t);
+		void disable_extISR(uint8_t select,uint32_t);
 		void set_priority_extISR(uint32_t, uint32_t);
 		void set_threshold_extISR(uint32_t);
 
@@ -91,46 +96,115 @@ namespace HAL {
 		void (*user_swISR)() = NULL;
       void (*user_extISR[N_INTS])(uint32_t);
 	};
-	
-	class PWM {  
+
+	class PWM {
 	public:
 		PWM();
-		static PWM* setupChannels(); // function to set up channels
 		PWM(PWM const&)=delete;
 		void operator=(PWM const&)=delete;
-
-		///test func with direct access to reg.
 		static PWM* setup();  
-		void setP(uint32_t value);
-		void enableChanl();
+		void setPeriod(int channel_num,uint32_t value);
+		uint32_t  getPeriod(int channel_num);
+		void setDuty(int channel_num,uint32_t value);
+		uint32_t  getDuty(int channel_num);
+		void setControlRegister(int channel_num,uint8_t enable, uint8_t polarity, uint8_t alignment);
 
-		//************************************************************
-		class Channel {
-		public:
-			Channel();
-
-			void setPeriod(uint32_t value);
-			uint32_t  getPeriod();
-			void setDuty(float percentage);
-			uint32_t  getDuty();
-			void setControlRegister(uint8_t enable, uint8_t polarity, uint8_t alignment);
-
-		private:
-			friend class PWM; // declare PWM as a friend class to allow access to private members
-			__IO uint32_t* per;
-			__IO uint32_t* duty;
-			__IO uint8_t* ctrl;
-			uint32_t curr_per;
-			uint32_t curr_duty;
-		};
-		int num_of_channle = 2;
-		Channel channels[2];  //2 -> num of channel
 		
-		//PWMRegBlk* pwm_reg_blk; //move it public to check reg val for testing *****
 	private:
 		static bool pwm_init;
 		PWMRegBlk* pwm_reg_blk;
 		
 	};
+
+	class TMR {
+	public:
+		typedef struct {
+            bool enable : 1;
+            bool edge : 1;
+            uint8_t outputMode : 2;
+            uint8_t inputSource : 2;
+            uint8_t inputMode : 2;
+            bool interruptEnable : 1;
+        } TimerChannelControlReg;  // for tccmr
+		TMR();
+		TMR(TMR const&)=delete;
+		static TMR* get_tmr();  //create and return a static tmr address
+		void tmr_enable(); //tcr enable
+		void tmr_disable();//tcr disable
+		void tmr_IRQenable(); //tcr inturrupt enable
+		void tmr_IRQdisable();//tcr inturrupt disable
+		uint32_t get_tmr_count();//tcnt, read timer count 
+		void tmr_config(uint32_t prescaler, uint32_t reloadval); //tpsc & tarr, setup prescaler and reload value
+		void channel_config(uint32_t channel, TimerChannelControlReg controlReg);//tcmmr, configure channel enable, mode
+		void set_tccr(uint32_t channel, uint32_t tccr_val);// set tccr value for a channel
+
+	private:
+		static bool tmr_init;
+		TimerRegBlk* tmr_reg_blk;
+	};
+
+	class IOMux {
+	public:
+		IOMux();
+		IOMux(IOMux const&)=delete;
+		static IOMux* IOMux_init();
+		void set_config(int pin, uint32_t func_sel);
+		void clear_config(int pin, uint32_t func_sel);
+	private:
+		static bool iomux_init;
+		IOMuxRegBlk* iomux_reg_blk;
+	};
+
+	class DMA{
+	public:
+		typedef struct {
+			bool TCIE;
+			bool HTIE;
+			bool SRC;
+			bool DST;
+			uint8_t PSIZE;
+			bool trig_en;
+			bool circular;
+			bool IDST;
+			bool ISRC;
+		} dmaControlConfig;
+		DMA();
+		DMA(DMA const&)=delete;
+		static DMA* dma_setup();
+		void dma_config(dmaControlConfig config);
+		void set_source(uint32_t src_addr);
+		void set_dest(uint32_t dest_addr);
+		void set_size(uint32_t bytes);
+		void startTxf();
+		void stopTxf();
+		bool checkeErr();
+	private:
+		static bool dma_init;
+		DMARegBlk* dma_reg_blk;
+	};
+//state reg & 0x2, error
+//state uart_regs->txstate & 1, ready to send
+//uart_regs->txdata = byte | (1u << 24);, send byte
+//state reg << 16, BAUD_CYCLES
+//uint8_t count = (uart_regs->rxdata; >> 24) & 0xFF;
+	class UART {
+	public:
+		UART();
+		UART(UART const&)=delete;
+		static UART* UART_init();
+		void set_Rx_BR(uint32_t BAUD_CYCLES);
+		void set_Tx_BR(uint32_t BAUD_CYCLES);
+		void send_byte(uint8_t byte);
+		uint32_t get_RX_data();
+		uint8_t get_RX_NumByteRead();
+		bool checkRx_state();
+		bool checkTx_state();
+		uint8_t get_TX_BR();
+	private:
+		static bool uart_init;
+		UARTRegBlk* uart_reg_blk;
+	};
+
+
 }
 #endif /* HAL_H_ */
